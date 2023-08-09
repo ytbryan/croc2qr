@@ -1,0 +1,2 @@
+rqrcode
+pty
