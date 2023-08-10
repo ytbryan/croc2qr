@@ -2,6 +2,7 @@
 
 require 'rqrcode'
 require 'pty'
+require 'benchmark'
 
 def wrap_croc_send(file_path)
   command = "croc send #{file_path}"
@@ -44,36 +45,43 @@ def croc_receive(code)
 end
 
 
-file_path = ARGV[0]
 
-if file_path == "-g"
-  # Generate a QR code for the given code
-  # Example: ruby croc2qr.rb -g "croc://code"
-  croc_code = ARGV[1]
-  if croc_code.nil?
-    croc_code = rand(100000..999999).to_s
+  file_path = ARGV[0]
+
+  if file_path == "-g"
+    time = Benchmark.measure do
+      # Generate a QR code for the given code
+      # Example: ruby croc2qr.rb -g "croc://code"
+      croc_code = ARGV[1]
+      if croc_code.nil?
+        croc_code = rand(100000..999999).to_s
+      end
+      
+      #write croc_code to file
+      File.write(".croc/croc-code.txt", croc_code)
+      qrcode = RQRCode::QRCode.new(croc_code)
+      svg = qrcode.as_svg
+      File.write("#{croc_code}_qr.svg", svg)
+    end
+    puts "Time taken: #{time.real} seconds"
+    exit
   end
-  
-  #write croc_code to file
-  File.write(".croc/croc-code.txt", croc_code)
-  qrcode = RQRCode::QRCode.new(croc_code)
-  svg = qrcode.as_svg
-  File.write("#{croc_code}_qr.svg", svg)
 
-  exit
-end
+  if file_path == "-f"
+    time = Benchmark.measure do
+    # Take the last croc_code and call croc with it
+    # Example: ./croc2qr -f
+    croc_code = `cat .croc/croc-code.txt`.strip
+    croc_receive(croc_code)
+    end
+    puts "Time taken: #{time.real} seconds"
+    exit
+  end
 
-if file_path == "-f"
-  # Take the last croc_code and call croc with it
-  # Example: ./croc2qr -f
-  croc_code = `cat .croc/croc-code.txt`.strip
-  croc_receive(croc_code)
-  exit
-end
+  if file_path.nil?
+    puts "Please provide the file path."
+    exit
+  end
 
-if file_path.nil?
-  puts "Please provide the file path."
-  exit
-end
+  wrap_croc_send(file_path)
 
-wrap_croc_send(file_path)
