@@ -23,9 +23,10 @@ And a qr.svg will be generated at the same location as the filepath
 ```
 
 ## TODO
-- [] -g or --generate to generate  a random QR code for sending files
-- [] -rl or --last start receiving using the last generated code
-- [] organise QR code into directories and order it based on timing
-- [] set a config file to control croc2qr
-- [] history.txt to track the list of items sent
+- [ ] -g or --generate to generate  a random QR code for sending files
+- [ ] -rl or --last start receiving using the last generated code
+- [ ] organise QR code into directories and order it based on timing
+- [ ] set a config file to control croc2qr
+- [ ] history.txt to track the list of items sent
+- [ ] Generate QR code into croc2qr location
 
