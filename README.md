@@ -1,6 +1,6 @@
 # Croc2QR
 
-A simple ruby script to generate QR code from croc code.
+A simple ruby script to generate QR code from [croc](https://github.com/schollz/croc) code.
 
 
 Usage: 
